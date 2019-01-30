@@ -1,0 +1,43 @@
+package com.example.stubu_000.myapplication;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.view.View;
+import android.widget.EditText;
+import java.util.Calendar;
+
+public class SearchActivity extends AppCompatActivity {
+
+    private EditText fromDate;
+    private EditText toDate;
+    private Calendar fromCalendar;
+    private Calendar toCalendar;
+    private DatePickerDialog.OnDateSetListener fromListener;
+    private DatePickerDialog.OnDateSetListener toListener;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        fromDate = (EditText) findViewById(R.id.search_fromDate);
+        toDate   = (EditText) findViewById(R.id.search_toDate);
+    }
+
+
+    public void cancel(final View v) {
+        Intent startNewActivity = new Intent(this, MainActivity.class);
+        startActivity(startNewActivity);
+        //finish();
+    }
+
+    public void search(final View v) {
+        Intent i = new Intent(SearchActivity.this, MainActivity.class);
+        i.putExtra("STARTDATE", fromDate.getText().toString());
+        i.putExtra("ENDDATE", toDate.getText().toString());
+        setResult(RESULT_OK, i);
+        finish();
+    }
+}
+
