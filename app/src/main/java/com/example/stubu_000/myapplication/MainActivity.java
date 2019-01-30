@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         displayPhoto(currentPhotoPath);
     }
     private View.onClickListener filterListener = new View.OnClickListener() {}
-
+//test
     public void search(View v) {
         Intent i = new Intent(MainActivity.this, SearchActivity.class);
         startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
