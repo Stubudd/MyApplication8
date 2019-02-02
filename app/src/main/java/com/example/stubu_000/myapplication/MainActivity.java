@@ -43,14 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
-        photoGallery = populateGallery(minDate, maxDate);
-        Log.d("onCreate, size", Integer.toString(photoGallery.size()));
+
+        /*photoGallery = populateGallery(minDate, maxDate);
+       Log.d("onCreate, size", Integer.toString(photoGallery.size()));
         if (photoGallery.size() > 0)
             currentPhotoPath = photoGallery.get(currentPhotoIndex);
-        displayPhoto(currentPhotoPath);
+        displayPhoto(currentPhotoPath);*/
     }
-    private View.onClickListener filterListener = new View.OnClickListener() {}
-//test
+    //private View.onClickListener filterListener = new View.OnClickListener() {}
+
     public void search(View v) {
         Intent i = new Intent(MainActivity.this, SearchActivity.class);
         startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
-    private void dispatchTakePictureIntent() {
+    protected void takePic(View v) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
+                        "com.example.stubu_000.myapplication.fileProvider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -101,13 +102,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void galleryAddPic() {
+/*    private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(mCurrentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
-    }
+    }*/
 
     private void setPic() {
         // Get the dimensions of the View
@@ -131,6 +132,18 @@ public class MainActivity extends AppCompatActivity {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         ImView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //ImView.setImageBitmap(imageBitmap);
+            ImageView mImageView = (ImageView) findViewById(R.id.imageViewer);
+            mImageView.setImageBitmap(BitmapFactory.decodeFile(mCurrentPhotoPath));
+
+        }
     }
 
 }
