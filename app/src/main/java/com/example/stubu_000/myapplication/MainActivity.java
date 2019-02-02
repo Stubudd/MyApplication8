@@ -1,7 +1,7 @@
 package com.example.stubu_000.myapplication;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
@@ -15,12 +15,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     public static final int SEARCH_ACTIVITY_REQUEST_CODE = 0;
     static final int CAMERA_REQUEST_CODE = 1;
     private String currentPhotoPath = null;
@@ -40,46 +42,110 @@ public class MainActivity extends AppCompatActivity {
         //Not sure what this button will be, search button?
         //Button btnFilter = (Button)findViewById(R.id.btnFilter);
         ImView = (ImageView) findViewById(R.id.imageViewer);
+        btnLeft.setOnClickListener(this);
+        btnRight.setOnClickListener(this);
+        //btnFilter.setOnClickListener(filterListener);
 
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
-
-        /*photoGallery = populateGallery(minDate, maxDate);
-       Log.d("onCreate, size", Integer.toString(photoGallery.size()));
+        photoGallery = populateGallery(minDate, maxDate);
+        Log.d("onCreate, size", Integer.toString(photoGallery.size()));
         if (photoGallery.size() > 0)
             currentPhotoPath = photoGallery.get(currentPhotoIndex);
-        displayPhoto(currentPhotoPath);*/
+        displayPhoto(currentPhotoPath);
     }
-    //private View.onClickListener filterListener = new View.OnClickListener() {}
+    private View.OnClickListener filterListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent i = new Intent(MainActivity.this, SearchActivity.class);
+            startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
+        }
+    };
 
     public void search(View v) {
         Intent i = new Intent(MainActivity.this, SearchActivity.class);
         startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
-   /* private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    private ArrayList<String> populateGallery(Date minDate, Date maxDate){
+        File file = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
+        photoGallery = new ArrayList<String>();
+        File[] fList = file.listFiles();
+        if (fList != null){
+            for (File f :file.listFiles()){
+                photoGallery.add(f.getPath());
+            }
         }
-    }*/
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+        return photoGallery;
+    }
+    private void displayPhoto(String path){
+        ImageView iv = (ImageView) ImView;
+        iv.setImageBitmap(BitmapFactory.decodeFile(path));
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    public void onClick( View v) {
+        switch (v.getId()){
+            case R.id.btnLeft:
+                --currentPhotoIndex;
+                break;
+            case R.id.btnRight:
+                ++currentPhotoIndex;
+                break;
+            default:
+                break;
+        }
+        if (currentPhotoIndex <0)
+            currentPhotoIndex = 0;
+        if (currentPhotoIndex >= photoGallery.size())
+            currentPhotoIndex = photoGallery.size() - 1;
+
+        currentPhotoPath = photoGallery.get(currentPhotoIndex);
+        Log.d("photoleft, size", Integer.toString(photoGallery.size()));
+        Log.d("photoleft, index", Integer.toString(currentPhotoIndex));
+        displayPhoto(currentPhotoPath);
+    }
+
+/*    public void goToSettings(View v) {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    public void goToDisplay(String x) {
+        Intent i = new Intent(this, DisplayActivity.class);
+        i.putExtra("DISPLAY_TEXT", x);
+        startActivity(i);
+    }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SEARCH_ACTIVITY_REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                Log.d("createImageFile", data.getStringExtra("STARTDATE"));
+                Log.d("createImageFile", data.getStringExtra("ENDDATE"));
+
+                photoGallery = populateGallery(new Date(), new Date());
+                Log.d("onCreate, size", Integer.toString(photoGallery.size()));
+                currentPhotoIndex = 0;
+                currentPhotoPath = photoGallery.get(currentPhotoIndex);
+                displayPhoto(currentPhotoPath);
+            }
+        }
+        if (requestCode == CAMERA_REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                Log.d("createImageFile", "Picture Taken");
+                photoGallery = populateGallery(new Date(), new Date());
+                currentPhotoIndex = 0;
+                currentPhotoPath = photoGallery.get(currentPhotoIndex);
+                displayPhoto(currentPhotoPath);
+            }
+        }
+    }
     protected void takePic(View v) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -90,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
+                Log.d("FileCreation", "Failed");
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -102,15 +169,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-/*    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }*/
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        Log.d("createImageFile", currentPhotoPath);
 
-    private void setPic() {
+        // Save a file: path for use with ACTION_VIEW intents
+        //mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+   /* private void setPic() {
         // Get the dimensions of the View
         int targetW = ImView.getWidth();
         int targetH = ImView.getHeight();
@@ -132,18 +209,8 @@ public class MainActivity extends AppCompatActivity {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         ImView.setImageBitmap(bitmap);
-    }
+    }*/
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();
-            //Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //ImView.setImageBitmap(imageBitmap);
-            ImageView mImageView = (ImageView) findViewById(R.id.imageViewer);
-            mImageView.setImageBitmap(BitmapFactory.decodeFile(mCurrentPhotoPath));
 
-        }
-    }
 
 }
