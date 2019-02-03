@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +18,8 @@ import java.util.Date;
 
 public class SearchActivity extends AppCompatActivity {
 
+    long toEndDate;
+    long fromStartDate;
     private EditText fromDate;
     private EditText toDate;
     private Calendar fromCalendar;
@@ -32,29 +35,24 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         fromDate = (EditText) findViewById(R.id.search_fromDate);
         toDate = (EditText) findViewById(R.id.search_toDate);
+        TextView ToDateLabel = (TextView) findViewById(R.id.search_toDateLabel);
+        TextView FromDateLabel = (TextView) findViewById(R.id.search_fromDate);
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
         photoGallery2 = populateGallery(minDate, maxDate);
     }
-    public void toDate(final View v){
-        EditText tDate = toDate;
 
-    }
-    /*
-    public void fromDate(final  View v){
-        EditText fDate = fromDate;
-    }*/
-    public String displayToDate(String toThis){
+    public String displayToDate(String update){
         TextView ToDate = (TextView) findViewById(R.id.search_toDateLabel);
-        ToDate.setText(toThis);
-        return toThis;
+        ToDate.setText(update);
+        return update;
     }
 
-    /*public String displayFromDate(String toThis){
+    public String displayFromDate(String update){
         final TextView FromDate =  (TextView) findViewById(R.id.search_fromDateLabel);
-        FromDate.setText(toThis);
-        return toThis;
-    }*/
+        FromDate.setText(update);
+        return update;
+    }
 
 
     public void cancel(final View v) {
@@ -68,8 +66,26 @@ public class SearchActivity extends AppCompatActivity {
         i.putExtra("STARTDATE", fromDate.getText().toString());
         i.putExtra("ENDDATE", toDate.getText().toString());
         setResult(RESULT_OK, i);
-        displayToDate(toDate.getText().toString());
-        //displayFromDate();
+        String endDateInput = toDate.getText().toString();
+        String startDateInput = fromDate.getText().toString();
+
+        try {
+            SimpleDateFormat toDateFormat = new SimpleDateFormat("yyyyMMdd");
+
+            Date endDate = toDateFormat.parse(endDateInput);
+            toEndDate = endDate.getTime();
+
+            Date startDate = toDateFormat.parse(startDateInput);
+            fromStartDate = startDate.getTime();
+
+        } catch(ParseException e) {
+        e.printStackTrace();
+        }
+
+        displayFromDate(startDateInput);
+        displayToDate(endDateInput);
+
+
         //finish();
 
     }
