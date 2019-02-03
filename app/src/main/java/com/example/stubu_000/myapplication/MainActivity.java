@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,10 +30,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String currentPhotoPath = null;
     private int currentPhotoIndex = 0;
     private ArrayList<String> photoGallery;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    String mCurrentPhotoPath;
+    private ArrayList<File> photoGallery2;
     static final int REQUEST_TAKE_PHOTO = 1;
     private ImageView ImView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +42,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btnLeft = (Button)findViewById(R.id.btnLeft);
         Button btnRight = (Button)findViewById(R.id.btnRight);
         //Not sure what this button will be, search button?
-        //Button btnFilter = (Button)findViewById(R.id.btnFilter);
+        Button Search = (Button)findViewById(R.id.search_search);
         ImView = (ImageView) findViewById(R.id.imageViewer);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
-        //btnFilter.setOnClickListener(filterListener);
+        Search.setOnClickListener(filterListener);
+        //timeTaken.setText(R.string.class(photoGallery(minDate,maxDate));
 
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
@@ -53,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (photoGallery.size() > 0)
             currentPhotoPath = photoGallery.get(currentPhotoIndex);
         displayPhoto(currentPhotoPath);
+        File f = photoGallery2.get(currentPhotoIndex);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(f.lastModified()));
+        updateTimeStamp(timeStamp);
     }
     private View.OnClickListener filterListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -60,6 +66,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
         }
     };
+    public String updateTimeStamp(String toThis){
+        final TextView timeTaken = (TextView) findViewById(R.id.TimeStamp);
+        timeTaken.setText(toThis);
+        return toThis;
+    }
 
     public void search(View v) {
         Intent i = new Intent(MainActivity.this, SearchActivity.class);
@@ -70,10 +81,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File file = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
         photoGallery = new ArrayList<String>();
+        photoGallery2 = new ArrayList<File>();
         File[] fList = file.listFiles();
         if (fList != null){
             for (File f :file.listFiles()){
                 photoGallery.add(f.getPath());
+                photoGallery2.add(f);
             }
         }
         return photoGallery;
@@ -108,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("photoleft, size", Integer.toString(photoGallery.size()));
         Log.d("photoleft, index", Integer.toString(currentPhotoIndex));
         displayPhoto(currentPhotoPath);
+        File f = photoGallery2.get(currentPhotoIndex);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(f.lastModified()));
+        updateTimeStamp(timeStamp);
     }
 
 /*    public void goToSettings(View v) {
@@ -171,46 +187,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String timeStampTemp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        //Date lastModDate = new Date(file.lastModified());
+        //Log.i("File last modified @ : "+ lastModDate.toString());
+        String imageFileName = "JPEG_" + timeStampTemp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(image.lastModified()));
         Log.d("createImageFile", currentPhotoPath);
-
+        timeStamp = image.getPath();
+        updateTimeStamp(timeStamp);
         // Save a file: path for use with ACTION_VIEW intents
         //mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+
     }
-
-
-   /* private void setPic() {
-        // Get the dimensions of the View
-        int targetW = ImView.getWidth();
-        int targetH = ImView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        ImView.setImageBitmap(bitmap);
-    }*/
-
-
 
 }
