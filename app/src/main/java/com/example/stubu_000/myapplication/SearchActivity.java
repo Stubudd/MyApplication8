@@ -1,5 +1,6 @@
 package com.example.stubu_000.myapplication;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +11,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements Serializable {
 
     long toEndDate;
     long fromStartDate;
@@ -30,6 +32,8 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<File> updatedPhotoGallery;
     private ArrayList<Integer> indexPhotoArray;
     private int currentPhotoIndex = 0;
+    Intent data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
         photoGallery2 = populateGallery(minDate, maxDate);
-
+        data = new Intent(SearchActivity.this, MainActivity.class);
     }
 
     public String displayToDate(String update) {
@@ -65,12 +69,13 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void search(final View v) {
-        Intent i = new Intent(SearchActivity.this, MainActivity.class);
-        i.putExtra("STARTDATE", fromDate.getText().toString());
-        i.putExtra("ENDDATE", toDate.getText().toString());
-        setResult(RESULT_OK, i);
+        //Intent i = new Intent(SearchActivity.this, MainActivity.class);
+        data.putExtra("STARTDATE", fromDate.getText().toString());
+        data.putExtra("ENDDATE", toDate.getText().toString());
+        //setResult(RESULT_OK, data);
         String endDateInput = toDate.getText().toString();
         String startDateInput = fromDate.getText().toString();
+
 
         try {
             SimpleDateFormat toDateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -88,7 +93,14 @@ public class SearchActivity extends AppCompatActivity {
         displayFromDate(startDateInput);
         displayToDate(endDateInput);
         updatedPhotoGallery = iterateGallery(fromStartDate, toEndDate);
+        data.putExtra("minDate", startDateInput);
+        
+        data.setData(Uri.parse(endDateInput));
 
+        setResult(RESULT_OK, data);
+        finish();
+        //startActivity(data);
+        //getIntent().putIntegerArrayListExtra(indexPhotoArray);
         //finish();
 
     }
@@ -108,10 +120,12 @@ public class SearchActivity extends AppCompatActivity {
 
     public ArrayList<File> iterateGallery(Long minDate, Long maxDate) {
         int indexArray = 0;
+        Intent intent = new Intent(SearchActivity.this, MainActivity.class);
         File file = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
         updatedPhotoGallery = new ArrayList<File>();
         indexPhotoArray = new ArrayList<Integer>();
+        intent.putExtra("newPhotos", indexPhotoArray);
         File[] fList = file.listFiles();
 
         if (fList != null) {
@@ -120,6 +134,7 @@ public class SearchActivity extends AppCompatActivity {
                 long lastModifiedDate = f.lastModified();
                 Date d = new Date(file.lastModified());
                 long time = d.getTime();
+                //if((lastModifiedDate) = )
                 if ((lastModifiedDate >= minDate) && (lastModifiedDate <= maxDate)) {
                     indexPhotoArray.add(indexArray);
                     updatedPhotoGallery.add(f); // you may not want to pass in the whole object, just
@@ -129,5 +144,6 @@ public class SearchActivity extends AppCompatActivity {
         }
         return updatedPhotoGallery;
     }
+
 }
 

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<File> photoGallery2;
     static final int REQUEST_TAKE_PHOTO = 1;
     private ImageView ImView;
+    public ArrayList<Integer> indexPhotoArray;
 
 
     @Override
@@ -59,11 +61,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File f = photoGallery2.get(currentPhotoIndex);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(f.lastModified()));
         updateTimeStamp(timeStamp);
+
     }
     private View.OnClickListener filterListener = new View.OnClickListener() {
         public void onClick(View v) {
             Intent i = new Intent(MainActivity.this, SearchActivity.class);
+            //indexPhotoArray = (ArrayList<Integer>) getIntent().getSerializableExtra("newPhotos");
             startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
+            //Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
+            //startActivityForResult(i,1);
         }
     };
     public String updateTimeStamp(String toThis){
@@ -91,6 +97,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return photoGallery;
     }
+   /* private ArrayList<File> populateGallery(ArrayList<File> oldIndexPhotos, ArrayList<Integer> newIndexPhotos){
+        int i = 0;
+        int j = 0;
+
+        for()
+    }*/
     private void displayPhoto(String path){
         ImageView iv = (ImageView) ImView;
         iv.setImageBitmap(BitmapFactory.decodeFile(path));
@@ -126,17 +138,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateTimeStamp(timeStamp);
     }
 
-/*    public void goToSettings(View v) {
-        Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-    }
-
-    public void goToDisplay(String x) {
-        Intent i = new Intent(this, DisplayActivity.class);
-        i.putExtra("DISPLAY_TEXT", x);
-        startActivity(i);
-    }*/
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("createImageFile", data.getStringExtra("STARTDATE"));
                 Log.d("createImageFile", data.getStringExtra("ENDDATE"));
 
+                Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
                 photoGallery = populateGallery(new Date(), new Date());
                 Log.d("onCreate, size", Integer.toString(photoGallery.size()));
                 currentPhotoIndex = 0;
@@ -206,5 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return image;
 
     }
+
+
 
 }
