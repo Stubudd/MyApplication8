@@ -27,6 +27,8 @@ public class SearchActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener fromListener;
     private DatePickerDialog.OnDateSetListener toListener;
     private ArrayList<File> photoGallery2;
+    private ArrayList<File> updatedPhotoGallery;
+    private ArrayList<Integer> indexPhotoArray;
     private int currentPhotoIndex = 0;
 
     @Override
@@ -40,16 +42,17 @@ public class SearchActivity extends AppCompatActivity {
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
         photoGallery2 = populateGallery(minDate, maxDate);
+
     }
 
-    public String displayToDate(String update){
+    public String displayToDate(String update) {
         TextView ToDate = (TextView) findViewById(R.id.search_toDateLabel);
         ToDate.setText(update);
         return update;
     }
 
-    public String displayFromDate(String update){
-        final TextView FromDate =  (TextView) findViewById(R.id.search_fromDateLabel);
+    public String displayFromDate(String update) {
+        final TextView FromDate = (TextView) findViewById(R.id.search_fromDateLabel);
         FromDate.setText(update);
         return update;
     }
@@ -78,31 +81,53 @@ public class SearchActivity extends AppCompatActivity {
             Date startDate = toDateFormat.parse(startDateInput);
             fromStartDate = startDate.getTime();
 
-        } catch(ParseException e) {
-        e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         displayFromDate(startDateInput);
         displayToDate(endDateInput);
-
+        updatedPhotoGallery = iterateGallery(fromStartDate, toEndDate);
 
         //finish();
 
     }
-    private ArrayList<File> populateGallery(Date minDate, Date maxDate){
+
+    private ArrayList<File> populateGallery(Date minDate, Date maxDate) {
         File file = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
         photoGallery2 = new ArrayList<File>();
         File[] fList = file.listFiles();
-        if (fList != null){
-            for (File f :file.listFiles()){
+        if (fList != null) {
+            for (File f : file.listFiles()) {
                 photoGallery2.add(f);
             }
         }
         return photoGallery2;
     }
 
+    public ArrayList<File> iterateGallery(Long minDate, Long maxDate) {
+        int indexArray = 0;
+        File file = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
+        updatedPhotoGallery = new ArrayList<File>();
+        indexPhotoArray = new ArrayList<Integer>();
+        File[] fList = file.listFiles();
 
-
+        if (fList != null) {
+            for (int i = 0; i < fList.length; ++i ) {
+                File f = fList[i];
+                long lastModifiedDate = f.lastModified();
+                Date d = new Date(file.lastModified());
+                long time = d.getTime();
+                if ((lastModifiedDate >= minDate) && (lastModifiedDate <= maxDate)) {
+                    indexPhotoArray.add(indexArray);
+                    updatedPhotoGallery.add(f); // you may not want to pass in the whole object, just
+                }
+                indexArray++;
+            }
+        }
+        return updatedPhotoGallery;
+    }
 }
 
