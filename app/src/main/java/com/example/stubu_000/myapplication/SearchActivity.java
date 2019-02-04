@@ -94,7 +94,7 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
         displayToDate(endDateInput);
         updatedPhotoGallery = iterateGallery(fromStartDate, toEndDate);
         data.putExtra("minDate", startDateInput);
-        
+
         data.setData(Uri.parse(endDateInput));
 
         setResult(RESULT_OK, data);

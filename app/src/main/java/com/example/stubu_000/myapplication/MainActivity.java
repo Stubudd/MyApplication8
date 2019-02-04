@@ -147,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("createImageFile", data.getStringExtra("ENDDATE"));
 
                 Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
+                data.getStringExtra("minDate");
+                Toast.makeText(this,data.getStringExtra("minDate"), Toast.LENGTH_SHORT).show();
                 photoGallery = populateGallery(new Date(), new Date());
                 Log.d("onCreate, size", Integer.toString(photoGallery.size()));
                 currentPhotoIndex = 0;
