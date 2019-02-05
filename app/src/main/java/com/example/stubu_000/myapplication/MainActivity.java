@@ -20,6 +20,7 @@ import java.io.File;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,12 +98,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return photoGallery;
     }
-   /* private ArrayList<File> populateGallery(ArrayList<File> oldIndexPhotos, ArrayList<Integer> newIndexPhotos){
-        int i = 0;
-        int j = 0;
+    private ArrayList<String> repopulateGallery(String newMinDate, String newMaxDate){
+        photoGallery2.clear();
+        File file = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
+        long fromStartDate = 0;
+        long toEndDate = 0;
 
-        for()
-    }*/
+        try {
+            SimpleDateFormat toDateFormat = new SimpleDateFormat("yyyyMMdd");
+
+            Date endDate = toDateFormat.parse(newMaxDate);
+            toEndDate = endDate.getTime();
+
+            Date startDate = toDateFormat.parse(newMinDate);
+            fromStartDate = startDate.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        File[] fList = file.listFiles();
+        if (fList != null){
+            for (File f :file.listFiles()){
+                long lastModifiedDate = f.lastModified();
+                if ((lastModifiedDate >= fromStartDate) && (lastModifiedDate <= toEndDate)) {
+                    photoGallery2.add(f);
+                }
+
+            }
+        }
+        return photoGallery;
+
+    }
+
     private void displayPhoto(String path){
         ImageView iv = (ImageView) ImView;
         iv.setImageBitmap(BitmapFactory.decodeFile(path));
@@ -146,13 +174,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("createImageFile", data.getStringExtra("STARTDATE"));
                 Log.d("createImageFile", data.getStringExtra("ENDDATE"));
 
-                Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
                 data.getStringExtra("minDate");
-                Toast.makeText(this,data.getStringExtra("minDate"), Toast.LENGTH_SHORT).show();
-                photoGallery = populateGallery(new Date(), new Date());
+                //Toast.makeText(this,data.getStringExtra("minDate"), Toast.LENGTH_SHORT).show();
+                photoGallery = repopulateGallery(data.getStringExtra("minDate"), data.getData().toString());
                 Log.d("onCreate, size", Integer.toString(photoGallery.size()));
                 currentPhotoIndex = 0;
-                currentPhotoPath = photoGallery.get(currentPhotoIndex);
+                File firstNewPhoto = photoGallery2.get(currentPhotoIndex);
+                currentPhotoPath = firstNewPhoto.getPath() ;
                 displayPhoto(currentPhotoPath);
             }
         }
