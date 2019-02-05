@@ -154,15 +154,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (currentPhotoIndex <0)
             currentPhotoIndex = 0;
-        if (currentPhotoIndex >= photoGallery.size())
-            currentPhotoIndex = photoGallery.size() - 1;
-
-        currentPhotoPath = photoGallery.get(currentPhotoIndex);
-        Log.d("photoleft, size", Integer.toString(photoGallery.size()));
+        if (currentPhotoIndex >= photoGallery2.size())
+            currentPhotoIndex = photoGallery2.size() - 1;
+        File freshPhoto = photoGallery2.get(currentPhotoIndex);
+        currentPhotoPath = freshPhoto.getPath();
+        Log.d("photoleft, size", Integer.toString(photoGallery2.size()));
         Log.d("photoleft, index", Integer.toString(currentPhotoIndex));
         displayPhoto(currentPhotoPath);
-        File f = photoGallery2.get(currentPhotoIndex);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(f.lastModified()));
+        //File f = photoGallery2.get(currentPhotoIndex);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(freshPhoto.lastModified()));
         updateTimeStamp(timeStamp);
     }
 

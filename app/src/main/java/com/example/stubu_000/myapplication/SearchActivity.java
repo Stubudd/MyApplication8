@@ -102,6 +102,7 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
         //startActivity(data);
         //getIntent().putIntegerArrayListExtra(indexPhotoArray);
         //finish();
+        //new
 
     }
 
