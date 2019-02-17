@@ -7,39 +7,79 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
+    <EditText
+        android:id="@+id/search_toCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="180dp"
+        android:layout_marginLeft="180dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="52dp"
+        android:ems="10"
+        android:hint="Caption"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/searchCaption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_toDate"
+        app:layout_constraintVertical_bias="1.0" />
+
     <TextView
         android:id="@+id/title_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="51dp"
-        android:layout_marginRight="51dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="468dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.023"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_toDate" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.995" />
 
     <TextView
         android:id="@+id/search_fromDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/title_search"
-        app:layout_constraintTop_toBottomOf="@+id/title_search" />
+        app:layout_constraintTop_toBottomOf="@+id/title_search"
+        app:layout_constraintVertical_bias="0.011" />
 
     <TextView
         android:id="@+id/search_toDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="34dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/search_fromDateLabel"
-        app:layout_constraintTop_toBottomOf="@+id/search_fromDateLabel" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_fromDateLabel"
+        app:layout_constraintVertical_bias="0.072" />
 
     <EditText
         android:id="@+id/search_fromDate"
@@ -61,20 +101,28 @@
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="To: YYYYMMDD"
         android:inputType="date"
+        app:layout_constraintBottom_toTopOf="@+id/title_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.018"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_fromDate" />
+        app:layout_constraintTop_toBottomOf="@+id/search_fromDate"
+        app:layout_constraintVertical_bias="0.53" />
 
     <Button
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="81dp"
-        android:text="Search"
+        android:layout_marginTop="88dp"
         android:onClick="search"
+        android:text="Search"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.455"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_toDateLabel" />
 
@@ -82,10 +130,31 @@
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="cancel"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="8dp"
         android:onClick="cancel"
-        app:layout_constraintStart_toStartOf="@+id/search"
-        app:layout_constraintTop_toBottomOf="@+id/search" />
+        android:text="cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="147dp" />
+
+    <TextView
+        android:id="@+id/searchCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="104dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toEndOf="@+id/search_toDateLabel"
+        app:layout_constraintTop_toBottomOf="@+id/search_toDate"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

@@ -12,9 +12,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     static final int REQUEST_TAKE_PHOTO = 1;
     private ImageView ImView;
     public ArrayList<Integer> indexPhotoArray;
+    String classMinDate;
+    String classMaxDate;
 
 
     @Override
@@ -44,16 +50,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Button btnLeft = (Button)findViewById(R.id.btnLeft);
         Button btnRight = (Button)findViewById(R.id.btnRight);
+        Button btnCaption = (Button)findViewById(R.id.buttonCaption);
         //Not sure what this button will be, search button?
         Button Search = (Button)findViewById(R.id.search_search);
         ImView = (ImageView) findViewById(R.id.imageViewer);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
+        btnCaption.setOnClickListener(this);
         Search.setOnClickListener(filterListener);
         //timeTaken.setText(R.string.class(photoGallery(minDate,maxDate));
 
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
+        classMinDate = "19500101";
+        classMaxDate = "20301231";
         photoGallery = populateGallery(minDate, maxDate);
         Log.d("onCreate, size", Integer.toString(photoGallery.size()));
         if (photoGallery.size() > 0)
@@ -62,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File f = photoGallery2.get(currentPhotoIndex);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(f.lastModified()));
         updateTimeStamp(timeStamp);
+        String caption = new String (f.getName());
+        updateCaption(caption);
 
     }
     private View.OnClickListener filterListener = new View.OnClickListener() {
@@ -73,10 +85,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //startActivityForResult(i,1);
         }
     };
+
     public String updateTimeStamp(String toThis){
         final TextView timeTaken = (TextView) findViewById(R.id.TimeStamp);
         timeTaken.setText(toThis);
         return toThis;
+    }
+    public String updateCaption (String toThis){
+        final TextView captionAdded = (TextView) findViewById(R.id.Caption);
+        captionAdded.setText(toThis);
+        return toThis;
+    }
+    public String storeCaption (String toThis){
+        final EditText newCaption = (EditText) findViewById(R.id.CaptionCaptured);
+        newCaption.setText(toThis);
+        return toThis;
+    }
+    public String getCaption (){
+        String myString;
+        final EditText newCaption = (EditText) findViewById(R.id.CaptionCaptured);
+        myString = newCaption.getText().toString();
+        return myString;
+    }
+    public void setCaption (String changeCaption){
+        final TextView newCaption = (TextView) findViewById(R.id.Caption);
+        newCaption.setText(changeCaption);
+
     }
 
     public void search(View v) {
@@ -98,6 +132,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return photoGallery;
     }
+    private void repopulateGalleryBasedOnCaption(String Caption){
+        photoGallery2.clear();
+        String fileName;
+        File file = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
+        File[] fList = file.listFiles();
+        if (fList != null){
+            for (File f :file.listFiles()) {
+                fileName = f.getName();
+                String [] separated = fileName.split("_");
+                String tempstring = separated[1];  //test2_.jpg
+                if(tempstring.compareTo(Caption) == 0){
+                    photoGallery2.add(f);
+                }
+                /*String currentString = "Fruit: they taste good";
+                String[] separated = currentString.split(":");
+                separated[0]; // this will contain "Fruit"
+                separated[1];*/
+            }
+
+            }
+            //return photoGallery;
+    }
+
     private ArrayList<String> repopulateGallery(String newMinDate, String newMaxDate){
         photoGallery2.clear();
         File file = new File(Environment.getExternalStorageDirectory()
@@ -142,28 +200,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onClick( View v) {
-        switch (v.getId()){
-            case R.id.btnLeft:
-                --currentPhotoIndex;
-                break;
-            case R.id.btnRight:
-                ++currentPhotoIndex;
-                break;
-            default:
-                break;
+        if(v.getId() == R.id.buttonCaption){
+           File photoCaption = photoGallery2.get(currentPhotoIndex);
+           photoCaption.setWritable(true);
+           String captionName = getCaption();
+           String tempName = "/Android/data/com.example.stubu_000.myapplication/files/Pictures/JPEG_"
+                   + captionName + "_.jpg";
+           File tempFile = new File(Environment.getExternalStorageDirectory()
+                    .getAbsolutePath(), tempName);
+           //File tempFile = new File(photoCaption.getPath() + "Stu");
+            tempFile.setWritable(true);
+           //boolean test = tempFile.renameTo(photoCaption);
+           boolean test2 = photoCaption.renameTo(tempFile);
+           repopulateGallery(classMinDate, classMaxDate);
+           setCaption(captionName);
+           Toast.makeText(this,"Happy", Toast.LENGTH_SHORT).show();
+           //String newCaption = new String(updateCaption(photoCaption.getName()));
+           //storeCaption(newCaption);
         }
-        if (currentPhotoIndex <0)
-            currentPhotoIndex = 0;
-        if (currentPhotoIndex >= photoGallery2.size())
-            currentPhotoIndex = photoGallery2.size() - 1;
-        File freshPhoto = photoGallery2.get(currentPhotoIndex);
-        currentPhotoPath = freshPhoto.getPath();
-        Log.d("photoleft, size", Integer.toString(photoGallery2.size()));
-        Log.d("photoleft, index", Integer.toString(currentPhotoIndex));
-        displayPhoto(currentPhotoPath);
-        //File f = photoGallery2.get(currentPhotoIndex);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(freshPhoto.lastModified()));
-        updateTimeStamp(timeStamp);
+        else {
+            switch (v.getId()) {
+                case R.id.btnLeft:
+                    --currentPhotoIndex;
+                    break;
+                case R.id.btnRight:
+                    ++currentPhotoIndex;
+                    break;
+                default:
+                    break;
+            }
+            if (currentPhotoIndex < 0)
+                currentPhotoIndex = 0;
+            if (currentPhotoIndex >= photoGallery2.size())
+                currentPhotoIndex = photoGallery2.size() - 1;
+            File freshPhoto = photoGallery2.get(currentPhotoIndex);
+            currentPhotoPath = freshPhoto.getPath();
+            Log.d("photoleft, size", Integer.toString(photoGallery2.size()));
+            Log.d("photoleft, index", Integer.toString(currentPhotoIndex));
+            displayPhoto(currentPhotoPath);
+            //File f = photoGallery2.get(currentPhotoIndex);
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(freshPhoto.lastModified()));
+            String caption = new String(freshPhoto.getName());
+            updateTimeStamp(timeStamp);
+            updateCaption(caption);
+        }
     }
 
     @Override
@@ -171,18 +251,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SEARCH_ACTIVITY_REQUEST_CODE){
             if (resultCode == RESULT_OK){
-                Log.d("createImageFile", data.getStringExtra("STARTDATE"));
-                Log.d("createImageFile", data.getStringExtra("ENDDATE"));
+                boolean testCaption = data.getBooleanExtra("captionSet", false);
+                if(testCaption){
+                    String captionSearched = data.getStringExtra("captionEntered");
+                    repopulateGalleryBasedOnCaption(captionSearched);
+                    currentPhotoIndex = 0;
+                    File firstNewPhoto = photoGallery2.get(currentPhotoIndex);
+                    currentPhotoPath = firstNewPhoto.getPath();
+                    displayPhoto(currentPhotoPath);
+                }else {
+                    Log.d("createImageFile", data.getStringExtra("STARTDATE"));
+                    Log.d("createImageFile", data.getStringExtra("ENDDATE"));
 
-                //Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
-                data.getStringExtra("minDate");
-                //Toast.makeText(this,data.getStringExtra("minDate"), Toast.LENGTH_SHORT).show();
-                photoGallery = repopulateGallery(data.getStringExtra("minDate"), data.getData().toString());
-                Log.d("onCreate, size", Integer.toString(photoGallery.size()));
-                currentPhotoIndex = 0;
-                File firstNewPhoto = photoGallery2.get(currentPhotoIndex);
-                currentPhotoPath = firstNewPhoto.getPath() ;
-                displayPhoto(currentPhotoPath);
+                    //Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
+                    data.getStringExtra("minDate");
+                    //Toast.makeText(this,data.getStringExtra("minDate"), Toast.LENGTH_SHORT).show();
+                    photoGallery = repopulateGallery(data.getStringExtra("minDate"), data.getData().toString());
+                    classMinDate = data.getStringExtra("minDate");
+                    classMaxDate = data.getData().toString();
+                    Log.d("onCreate, size", Integer.toString(photoGallery.size()));
+                    currentPhotoIndex = 0;
+                    File firstNewPhoto = photoGallery2.get(currentPhotoIndex);
+                    currentPhotoPath = firstNewPhoto.getPath();
+                    displayPhoto(currentPhotoPath);
+                }
             }
         }
         if (requestCode == CAMERA_REQUEST_CODE){

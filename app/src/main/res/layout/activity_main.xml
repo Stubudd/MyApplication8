@@ -10,7 +10,7 @@
         android:id="@+id/imageViewer"
         android:layout_width="240dp"
         android:layout_height="325dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="TODO"
         app:layout_constraintBottom_toTopOf="@+id/Snap"
@@ -103,21 +103,21 @@
         android:layout_marginBottom="8dp"
         android:text="Time Stamp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintEnd_toStartOf="@+id/Caption"
         app:layout_constraintHorizontal_bias="0.012"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.818" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/Caption"
         android:layout_width="153dp"
-        android:layout_height="33dp"
+        android:layout_height="76dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Edit View"
+        android:text="Caption"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -136,5 +136,36 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="620dp" />
+
+    <EditText
+        android:id="@+id/CaptionCaptured"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="Caption"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/TimeStamp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Snap" />
+
+    <Button
+        android:id="@+id/buttonCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Add Caption"
+        app:layout_constraintBottom_toTopOf="@+id/Caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/CaptionCaptured"
+        app:layout_constraintTop_toBottomOf="@+id/Snap" />
 
 </android.support.constraint.ConstraintLayout>

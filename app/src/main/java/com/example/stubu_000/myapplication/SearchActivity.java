@@ -60,6 +60,24 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
         FromDate.setText(update);
         return update;
     }
+    public String getFromDate (){
+        String myString;
+        final EditText fromDate = (EditText) findViewById(R.id.search_fromDate);
+        myString = fromDate.getText().toString();
+        return myString;
+    }
+    public String getToDate (){
+        String myString;
+        final EditText toDate = (EditText) findViewById(R.id.search_toDate);
+        myString = toDate.getText().toString();
+        return myString;
+    }
+    public String getCaption (){
+        String myString;
+        final EditText newCaption = (EditText) findViewById(R.id.search_toCaption);
+        myString = newCaption.getText().toString();
+        return myString;
+    }
 
 
     public void cancel(final View v) {
@@ -70,35 +88,55 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
 
     public void search(final View v) {
         //Intent i = new Intent(SearchActivity.this, MainActivity.class);
-        data.putExtra("STARTDATE", fromDate.getText().toString());
-        data.putExtra("ENDDATE", toDate.getText().toString());
-        //setResult(RESULT_OK, data);
-        String endDateInput = toDate.getText().toString();
-        String startDateInput = fromDate.getText().toString();
+        String tempFromDate = getFromDate();
+        String tempToDate = getToDate();
+        String tempCaption = getCaption();
+        //if (userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null"))
+        boolean fromDateSearched = tempFromDate != null && !tempFromDate.isEmpty() && !tempFromDate.equals("null");
+        boolean toDateSearched = tempToDate != null && !tempToDate.isEmpty() && !tempToDate.equals("null");
+        boolean tempCaptionSearched = tempCaption != null && !tempCaption.isEmpty() && !tempCaption.equals("null");
+
+        if(fromDateSearched && toDateSearched) {
+            data.putExtra("STARTDATE", fromDate.getText().toString());
+            data.putExtra("ENDDATE", toDate.getText().toString());
+            //setResult(RESULT_OK, data);
+            String endDateInput = toDate.getText().toString();
+            String startDateInput = fromDate.getText().toString();
 
 
-        try {
-            SimpleDateFormat toDateFormat = new SimpleDateFormat("yyyyMMdd");
+            try {
+                SimpleDateFormat toDateFormat = new SimpleDateFormat("yyyyMMdd");
 
-            Date endDate = toDateFormat.parse(endDateInput);
-            toEndDate = endDate.getTime();
+                Date endDate = toDateFormat.parse(endDateInput);
+                toEndDate = endDate.getTime();
 
-            Date startDate = toDateFormat.parse(startDateInput);
-            fromStartDate = startDate.getTime();
+                Date startDate = toDateFormat.parse(startDateInput);
+                fromStartDate = startDate.getTime();
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            displayFromDate(startDateInput);
+            displayToDate(endDateInput);
+            updatedPhotoGallery = iterateGallery(fromStartDate, toEndDate);
+            data.putExtra("minDate", startDateInput);
+
+            data.setData(Uri.parse(endDateInput));
+
+            setResult(RESULT_OK, data);
+            finish();
         }
-
-        displayFromDate(startDateInput);
-        displayToDate(endDateInput);
-        updatedPhotoGallery = iterateGallery(fromStartDate, toEndDate);
-        data.putExtra("minDate", startDateInput);
-
-        data.setData(Uri.parse(endDateInput));
-
-        setResult(RESULT_OK, data);
-        finish();
+        else if(tempCaptionSearched){
+            data.putExtra("captionEntered", tempCaption);
+            data.putExtra("captionSet", true);
+            setResult(RESULT_OK, data);
+            finish();
+        }
+        else {
+            Intent startNewActivity = new Intent(this, MainActivity.class);
+            startActivity(startNewActivity);
+        }
         //startActivity(data);
         //getIntent().putIntegerArrayListExtra(indexPhotoArray);
         //finish();
