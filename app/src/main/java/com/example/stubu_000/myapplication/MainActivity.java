@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File[] fList = file.listFiles();
         if (fList != null){
             for (File f :file.listFiles()) {
+                //commit Comment
                 fileName = f.getName();
                 String [] separated = fileName.split("_");
                 String tempstring = separated[1];  //test2_.jpg
