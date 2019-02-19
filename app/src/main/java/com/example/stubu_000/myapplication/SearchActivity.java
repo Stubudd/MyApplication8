@@ -24,8 +24,8 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
     long fromStartDate;
     private EditText fromDate;
     private EditText toDate;
-    private Calendar fromCalendar;
-    private Calendar toCalendar;
+    //private Calendar fromCalendar;
+    //private Calendar toCalendar;
     private DatePickerDialog.OnDateSetListener fromListener;
     private DatePickerDialog.OnDateSetListener toListener;
     private ArrayList<File> photoGallery2;
@@ -78,6 +78,18 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
         myString = newCaption.getText().toString();
         return myString;
     }
+    public String getLongitude (){
+        String myString;
+        final EditText newLongitude = (EditText) findViewById(R.id.search_toLongitude);
+        myString = newLongitude.getText().toString();
+        return myString;
+    }
+    public String getLatitude (){
+        String myString;
+        final EditText newLatitude = (EditText) findViewById(R.id.search_toLatitude);
+        myString = newLatitude.getText().toString();
+        return myString;
+    }
 
 
     public void cancel(final View v) {
@@ -91,10 +103,14 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
         String tempFromDate = getFromDate();
         String tempToDate = getToDate();
         String tempCaption = getCaption();
+        String tempLongitude = getLongitude();
+        String tempLatitude = getLatitude();
         //if (userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null"))
         boolean fromDateSearched = tempFromDate != null && !tempFromDate.isEmpty() && !tempFromDate.equals("null");
         boolean toDateSearched = tempToDate != null && !tempToDate.isEmpty() && !tempToDate.equals("null");
         boolean tempCaptionSearched = tempCaption != null && !tempCaption.isEmpty() && !tempCaption.equals("null");
+        boolean tempLongitudeSearched = tempLongitude != null && !tempLongitude.isEmpty() && !tempLongitude.equals("null");
+        boolean tempLatitudeSearched = tempLatitude != null && !tempLatitude.isEmpty() && !tempLatitude.equals("null");
 
         if(fromDateSearched && toDateSearched) {
             data.putExtra("STARTDATE", fromDate.getText().toString());
@@ -133,14 +149,17 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
             setResult(RESULT_OK, data);
             finish();
         }
+        else if(tempLatitudeSearched && tempLongitudeSearched){
+            data.putExtra("longitudeEntered", tempLongitude);
+            data.putExtra("latitudeEntered", tempLatitude);
+            data.putExtra("longLatSet", true);
+            setResult(RESULT_OK, data);
+            finish();
+        }
         else {
             Intent startNewActivity = new Intent(this, MainActivity.class);
             startActivity(startNewActivity);
         }
-        //startActivity(data);
-        //getIntent().putIntegerArrayListExtra(indexPhotoArray);
-        //finish();
-        //new
 
     }
 

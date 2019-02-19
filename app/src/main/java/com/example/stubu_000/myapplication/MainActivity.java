@@ -42,7 +42,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ArrayList<Integer> indexPhotoArray;
     String classMinDate;
     String classMaxDate;
-
+    GPSTracker gps;
+    double latitude;
+    double longitude;
+    String timeStampTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Date maxDate = new Date(Long.MAX_VALUE);
         classMinDate = "19500101";
         classMaxDate = "20301231";
+        timeStampTemp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         photoGallery = populateGallery(minDate, maxDate);
         Log.d("onCreate, size", Integer.toString(photoGallery.size()));
         if (photoGallery.size() > 0)
@@ -96,11 +100,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         captionAdded.setText(toThis);
         return toThis;
     }
-    public String storeCaption (String toThis){
+   /* public String storeCaption (String toThis){
         final EditText newCaption = (EditText) findViewById(R.id.CaptionCaptured);
         newCaption.setText(toThis);
         return toThis;
-    }
+    }*/
     public String getCaption (){
         String myString;
         final EditText newCaption = (EditText) findViewById(R.id.CaptionCaptured);
@@ -132,6 +136,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return photoGallery;
     }
+    private void repopulateGalleryLatitudeLongitude(String Longitude, String Latitude){
+        photoGallery2.clear();
+        String fileName;
+        File file = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
+        File[] fList = file.listFiles();
+        if (fList != null) {
+            for (File f : file.listFiles()) {
+                fileName = f.getName();
+                String[] separated = fileName.split("_");
+                String tempLongitude = separated[4];  //test2_.jpg
+                String tempLatitude = separated[5];
+                if ((tempLongitude.compareTo(Longitude) == 0) && ((tempLatitude.compareTo(Latitude) == 0))) {
+                    photoGallery2.add(f);
+                }
+            }
+        }
+    }
+
     private void repopulateGalleryBasedOnCaption(String Caption){
         photoGallery2.clear();
         String fileName;
@@ -143,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //commit Comment
                 fileName = f.getName();
                 String [] separated = fileName.split("_");
-                String tempstring = separated[1];  //test2_.jpg
+                String tempstring = separated[3];  //test2_.jpg
                 if(tempstring.compareTo(Caption) == 0){
                     photoGallery2.add(f);
                 }
@@ -203,10 +226,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick( View v) {
         if(v.getId() == R.id.buttonCaption){
            File photoCaption = photoGallery2.get(currentPhotoIndex);
+           String fileName;
+           fileName = photoCaption.getName();
            photoCaption.setWritable(true);
            String captionName = getCaption();
+           String [] separated = fileName.split("_");
            String tempName = "/Android/data/com.example.stubu_000.myapplication/files/Pictures/JPEG_"
-                   + captionName + "_.jpg";
+                   + separated[1] + "_" + separated[2] + "_"  + captionName + "_" + separated[4] + "_" + separated[5] + "_" + separated[6];
            File tempFile = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath(), tempName);
            //File tempFile = new File(photoCaption.getPath() + "Stu");
@@ -216,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            repopulateGallery(classMinDate, classMaxDate);
            setCaption(captionName);
            Toast.makeText(this,"Happy", Toast.LENGTH_SHORT).show();
+           updateCaption(fileName);
            //String newCaption = new String(updateCaption(photoCaption.getName()));
            //storeCaption(newCaption);
         }
@@ -253,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == SEARCH_ACTIVITY_REQUEST_CODE){
             if (resultCode == RESULT_OK){
                 boolean testCaption = data.getBooleanExtra("captionSet", false);
+                boolean testLocation = data.getBooleanExtra("longLatSet", false);
                 if(testCaption){
                     String captionSearched = data.getStringExtra("captionEntered");
                     repopulateGalleryBasedOnCaption(captionSearched);
@@ -260,7 +288,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     File firstNewPhoto = photoGallery2.get(currentPhotoIndex);
                     currentPhotoPath = firstNewPhoto.getPath();
                     displayPhoto(currentPhotoPath);
-                }else {
+                }else if(testLocation){
+                   String longitudeSearched = data.getStringExtra("longitudeEntered");
+                   String latitudeSearched = data.getStringExtra("latitudeEntered");
+                   repopulateGalleryLatitudeLongitude(longitudeSearched, latitudeSearched);
+                   currentPhotoIndex = 0;
+                   File firstNewPhoto = photoGallery2.get(currentPhotoIndex);
+                   currentPhotoPath = firstNewPhoto.getPath();
+                   displayPhoto(currentPhotoPath);
+                }
+                else {
                     Log.d("createImageFile", data.getStringExtra("STARTDATE"));
                     Log.d("createImageFile", data.getStringExtra("ENDDATE"));
 
@@ -280,15 +317,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (requestCode == CAMERA_REQUEST_CODE){
             if (resultCode == RESULT_OK){
-                Log.d("createImageFile", "Picture Taken");
-                photoGallery = populateGallery(new Date(), new Date());
-                currentPhotoIndex = 0;
-                currentPhotoPath = photoGallery.get(currentPhotoIndex);
-                displayPhoto(currentPhotoPath);
+                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+                    Log.d("createImageFile", "Picture Taken");
+                    photoGallery = populateGallery(new Date(), new Date());
+                    currentPhotoIndex = 0;
+                    currentPhotoPath = photoGallery.get(currentPhotoIndex);
+                    displayPhoto(currentPhotoPath);
             }
         }
     }
     protected void takePic(View v) {
+        gps = new GPSTracker(MainActivity.this);
+        if(gps.canGetLocation()) {
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+        }
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -312,11 +355,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private File createImageFile() throws IOException {
+
         // Create an image file name
-        String timeStampTemp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         //Date lastModDate = new Date(file.lastModified());
         //Log.i("File last modified @ : "+ lastModDate.toString());
-        String imageFileName = "JPEG_" + timeStampTemp + "_";
+        String imageFileName = "JPEG_" + timeStampTemp +"_NoCaption_" + longitude + "_" + latitude + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
