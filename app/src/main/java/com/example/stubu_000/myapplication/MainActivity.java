@@ -14,16 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
 
 import java.io.File;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,14 +51,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btnLeft = (Button)findViewById(R.id.btnLeft);
         Button btnRight = (Button)findViewById(R.id.btnRight);
         Button btnCaption = (Button)findViewById(R.id.buttonCaption);
-        //Not sure what this button will be, search button?
         Button Search = (Button)findViewById(R.id.search_search);
         ImView = (ImageView) findViewById(R.id.imageViewer);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
         btnCaption.setOnClickListener(this);
         Search.setOnClickListener(filterListener);
-        //timeTaken.setText(R.string.class(photoGallery(minDate,maxDate));
 
         Date minDate = new Date(Long.MIN_VALUE);
         Date maxDate = new Date(Long.MAX_VALUE);
@@ -83,10 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View.OnClickListener filterListener = new View.OnClickListener() {
         public void onClick(View v) {
             Intent i = new Intent(MainActivity.this, SearchActivity.class);
-            //indexPhotoArray = (ArrayList<Integer>) getIntent().getSerializableExtra("newPhotos");
             startActivityForResult(i, SEARCH_ACTIVITY_REQUEST_CODE);
-            //Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
-            //startActivityForResult(i,1);
+
         }
     };
 
@@ -100,11 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         captionAdded.setText(toThis);
         return toThis;
     }
-   /* public String storeCaption (String toThis){
-        final EditText newCaption = (EditText) findViewById(R.id.CaptionCaptured);
-        newCaption.setText(toThis);
-        return toThis;
-    }*/
     public String getCaption (){
         String myString;
         final EditText newCaption = (EditText) findViewById(R.id.CaptionCaptured);
@@ -146,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (File f : file.listFiles()) {
                 fileName = f.getName();
                 String[] separated = fileName.split("_");
-                String tempLongitude = separated[4];  //test2_.jpg
+                String tempLongitude = separated[4];
                 String tempLatitude = separated[5];
                 if ((tempLongitude.compareTo(Longitude) == 0) && ((tempLatitude.compareTo(Latitude) == 0))) {
                     photoGallery2.add(f);
@@ -163,21 +151,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File[] fList = file.listFiles();
         if (fList != null){
             for (File f :file.listFiles()) {
-                //commit Comment
                 fileName = f.getName();
                 String [] separated = fileName.split("_");
                 String tempstring = separated[3];  //test2_.jpg
                 if(tempstring.compareTo(Caption) == 0){
                     photoGallery2.add(f);
                 }
-                /*String currentString = "Fruit: they taste good";
-                String[] separated = currentString.split(":");
-                separated[0]; // this will contain "Fruit"
-                separated[1];*/
+
             }
 
             }
-            //return photoGallery;
+
     }
 
     private ArrayList<String> repopulateGallery(String newMinDate, String newMaxDate){
@@ -235,16 +219,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                    + separated[1] + "_" + separated[2] + "_"  + captionName + "_" + separated[4] + "_" + separated[5] + "_" + separated[6];
            File tempFile = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath(), tempName);
-           //File tempFile = new File(photoCaption.getPath() + "Stu");
             tempFile.setWritable(true);
-           //boolean test = tempFile.renameTo(photoCaption);
            boolean test2 = photoCaption.renameTo(tempFile);
            repopulateGallery(classMinDate, classMaxDate);
            setCaption(captionName);
            Toast.makeText(this,"Happy", Toast.LENGTH_SHORT).show();
            updateCaption(fileName);
-           //String newCaption = new String(updateCaption(photoCaption.getName()));
-           //storeCaption(newCaption);
         }
         else {
             switch (v.getId()) {
@@ -266,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("photoleft, size", Integer.toString(photoGallery2.size()));
             Log.d("photoleft, index", Integer.toString(currentPhotoIndex));
             displayPhoto(currentPhotoPath);
-            //File f = photoGallery2.get(currentPhotoIndex);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(freshPhoto.lastModified()));
             String caption = new String(freshPhoto.getName());
             updateTimeStamp(timeStamp);
@@ -301,9 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d("createImageFile", data.getStringExtra("STARTDATE"));
                     Log.d("createImageFile", data.getStringExtra("ENDDATE"));
 
-                    //Toast.makeText(this,data.getData().toString(), Toast.LENGTH_SHORT).show();
                     data.getStringExtra("minDate");
-                    //Toast.makeText(this,data.getStringExtra("minDate"), Toast.LENGTH_SHORT).show();
                     photoGallery = repopulateGallery(data.getStringExtra("minDate"), data.getData().toString());
                     classMinDate = data.getStringExtra("minDate");
                     classMaxDate = data.getData().toString();
@@ -357,8 +334,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private File createImageFile() throws IOException {
 
         // Create an image file name
-        //Date lastModDate = new Date(file.lastModified());
-        //Log.i("File last modified @ : "+ lastModDate.toString());
         String imageFileName = "JPEG_" + timeStampTemp +"_NoCaption_" + longitude + "_" + latitude + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -370,8 +345,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("createImageFile", currentPhotoPath);
         timeStamp = image.getPath();
         updateTimeStamp(timeStamp);
-        // Save a file: path for use with ACTION_VIEW intents
-        //mCurrentPhotoPath = image.getAbsolutePath();
         return image;
 
     }

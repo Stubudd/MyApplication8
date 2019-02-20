@@ -24,8 +24,6 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
     long fromStartDate;
     private EditText fromDate;
     private EditText toDate;
-    //private Calendar fromCalendar;
-    //private Calendar toCalendar;
     private DatePickerDialog.OnDateSetListener fromListener;
     private DatePickerDialog.OnDateSetListener toListener;
     private ArrayList<File> photoGallery2;
@@ -99,13 +97,11 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
     }
 
     public void search(final View v) {
-        //Intent i = new Intent(SearchActivity.this, MainActivity.class);
         String tempFromDate = getFromDate();
         String tempToDate = getToDate();
         String tempCaption = getCaption();
         String tempLongitude = getLongitude();
         String tempLatitude = getLatitude();
-        //if (userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null"))
         boolean fromDateSearched = tempFromDate != null && !tempFromDate.isEmpty() && !tempFromDate.equals("null");
         boolean toDateSearched = tempToDate != null && !tempToDate.isEmpty() && !tempToDate.equals("null");
         boolean tempCaptionSearched = tempCaption != null && !tempCaption.isEmpty() && !tempCaption.equals("null");
@@ -115,7 +111,6 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
         if(fromDateSearched && toDateSearched) {
             data.putExtra("STARTDATE", fromDate.getText().toString());
             data.putExtra("ENDDATE", toDate.getText().toString());
-            //setResult(RESULT_OK, data);
             String endDateInput = toDate.getText().toString();
             String startDateInput = fromDate.getText().toString();
 
@@ -192,10 +187,9 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
                 long lastModifiedDate = f.lastModified();
                 Date d = new Date(file.lastModified());
                 long time = d.getTime();
-                //if((lastModifiedDate) = )
                 if ((lastModifiedDate >= minDate) && (lastModifiedDate <= maxDate)) {
                     indexPhotoArray.add(indexArray);
-                    updatedPhotoGallery.add(f); // you may not want to pass in the whole object, just
+                    updatedPhotoGallery.add(f);
                 }
                 indexArray++;
             }

@@ -37,7 +37,7 @@ public class UITests {
         for (int i = 0; i <= 5; i++) {
             onView(withId(R.id.btnRight)).perform(click());
         }
-    } 
+    }
     @Test
     public void TestSearchLocation() {
         onView(withId(R.id.search_search)).perform(click());
