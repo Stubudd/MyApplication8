@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class  MainActivity extends AppCompatActivity implements View.OnClickListener{
     public static final int SEARCH_ACTIVITY_REQUEST_CODE = 0;
     static final int CAMERA_REQUEST_CODE = 1;
     private String currentPhotoPath = null;
@@ -163,6 +163,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
     }
+
+//    private void repopulateGalleryBasedOnDate(String Caption){
+//        photoGallery2.clear();
+//        String fileName;
+//        File file = new File(Environment.getExternalStorageDirectory()
+//                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
+//        File[] fList = file.listFiles();
+//        if (fList != null){
+//            for (File f :file.listFiles()) {
+//                fileName = f.getName();
+//                String [] separated = fileName.split("_");
+//                String tempstring = separated[3];  //test2_.jpg
+//                if(tempstring.compareTo(Caption) == 0){
+//                    photoGallery2.add(f);
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
 
     private ArrayList<String> repopulateGallery(String newMinDate, String newMaxDate){
         photoGallery2.clear();
@@ -303,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-    protected void takePic(View v) {
+    public void takePic(View v) {
         gps = new GPSTracker(MainActivity.this);
         if(gps.canGetLocation()) {
             latitude = gps.getLatitude();

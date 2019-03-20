@@ -136,7 +136,8 @@
         android:inputType="date"
         app:layout_constraintEnd_toStartOf="@+id/search_toDateLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_fromDate" />
+        app:layout_constraintTop_toBottomOf="@+id/search_fromDate"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/search"

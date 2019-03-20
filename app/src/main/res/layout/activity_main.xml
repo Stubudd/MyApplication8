@@ -147,6 +147,7 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Caption"
+        android:autofillHints="Autofill_Caption"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/TimeStamp"
         app:layout_constraintStart_toStartOf="parent"

@@ -48,4 +48,27 @@ public class UITests {
             onView(withId(R.id.btnRight)).perform(click());
         }
     }
+    @Test
+    public void TestSearchDateAndCaptionUpdate() {
+        onView(withId(R.id.CaptionCaptured)).perform(typeText("newCaption"), closeSoftKeyboard());
+        onView(withId(R.id.buttonCaption)).perform(click());
+        onView(withId(R.id.search_search)).perform(click());
+        onView(withId(R.id.search_toCaption)).perform(typeText("newCaption"), closeSoftKeyboard());
+        onView(withId(R.id.search)).perform(click());
+        for (int i = 0; i <= 5; i++) {
+            onView(withId(R.id.btnRight)).perform(click());
+        }
+        onView(withId(R.id.search_search)).perform(click());
+        onView(withId(R.id.search_toDate)).perform(typeText("20190219"), closeSoftKeyboard());
+        onView(withId(R.id.search_fromDate)).perform(typeText("20190218"), closeSoftKeyboard());
+        onView(withId(R.id.search)).perform(click());
+        for (int i = 0; i <= 5; i++) {
+            onView(withId(R.id.btnRight)).perform(click());
+        }
+    }
+    /*@Test
+    public void PostSocialMedia() {
+        onView(withId(R.id.postFacebook)).perform(click());
+        onView(withId(R.id.postTwitter)).perform(click());
+    }*/
 }
