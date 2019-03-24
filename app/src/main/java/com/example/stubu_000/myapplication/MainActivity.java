@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         displayPhoto(currentPhotoPath);
         File f = photoGallery2.get(currentPhotoIndex);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(f.lastModified()));
-        updateTimeStamp(timeStamp);
         String caption = new String (f.getName());
         updateCaption(caption);
 
@@ -83,13 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    public String updateTimeStamp(String toThis){
-        final TextView timeTaken = (TextView) findViewById(R.id.TimeStamp);
-        timeTaken.setText(toThis);
-        return toThis;
-    }
     public String updateCaption (String toThis){
-        final TextView captionAdded = (TextView) findViewById(R.id.Caption);
+        final TextView captionAdded = (TextView) findViewById(R.id.CurrentPhotoDetails);
         captionAdded.setText(toThis);
         return toThis;
     }
@@ -100,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return myString;
     }
     public void setCaption (String changeCaption){
-        final TextView newCaption = (TextView) findViewById(R.id.Caption);
+        final TextView newCaption = (TextView) findViewById(R.id.CurrentPhotoDetails);
         newCaption.setText(changeCaption);
 
     }
@@ -248,7 +242,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             displayPhoto(currentPhotoPath);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(freshPhoto.lastModified()));
             String caption = new String(freshPhoto.getName());
-            updateTimeStamp(timeStamp);
             updateCaption(caption);
         }
     }
@@ -344,7 +337,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(image.lastModified()));
         Log.d("createImageFile", currentPhotoPath);
         timeStamp = image.getPath();
-        updateTimeStamp(timeStamp);
         return image;
 
     }

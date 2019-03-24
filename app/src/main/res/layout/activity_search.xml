@@ -14,6 +14,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:text="TextView"
+        android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/search_toLatitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_toLatitude" />
@@ -26,6 +27,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:text="TextView"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_toLongitude"
         app:layout_constraintTop_toTopOf="@+id/search_toLongitude" />
@@ -80,6 +82,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:text="TextView"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_fromDate"
         app:layout_constraintTop_toTopOf="parent" />
@@ -91,6 +94,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:text="TextView"
+        android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/search_toDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_toDate" />
@@ -158,6 +162,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:text="TextView"
+        android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/search_toCaption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_toCaption" />
