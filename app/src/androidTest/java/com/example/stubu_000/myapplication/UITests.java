@@ -3,6 +3,8 @@ package com.example.stubu_000.myapplication;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +24,8 @@ public class UITests {
     @Test
     public void TestSearchDate() {
         onView(withId(R.id.search_search)).perform(click());
-        onView(withId(R.id.search_toDate)).perform(typeText("20190219"), closeSoftKeyboard());
-        onView(withId(R.id.search_fromDate)).perform(typeText("20190218"), closeSoftKeyboard());
+        onView(withId(R.id.search_toDate)).perform(typeText("20190302"), closeSoftKeyboard());
+        onView(withId(R.id.search_fromDate)).perform(typeText("20190301"), closeSoftKeyboard());
         onView(withId(R.id.search)).perform(click());
         for (int i = 0; i <= 5; i++) {
             onView(withId(R.id.btnRight)).perform(click());
@@ -32,7 +34,7 @@ public class UITests {
     @Test
     public void TestSearchCaption() {
         onView(withId(R.id.search_search)).perform(click());
-        onView(withId(R.id.search_toCaption)).perform(typeText("newCaption"), closeSoftKeyboard());
+        onView(withId(R.id.search_toCaption)).perform(typeText("NoCaption"), closeSoftKeyboard());
         onView(withId(R.id.search)).perform(click());
         for (int i = 0; i <= 5; i++) {
             onView(withId(R.id.btnRight)).perform(click());
@@ -41,11 +43,30 @@ public class UITests {
     @Test
     public void TestSearchLocation() {
         onView(withId(R.id.search_search)).perform(click());
-        onView(withId(R.id.search_toLatitude)).perform(typeText("49.2696758"), closeSoftKeyboard());
-        onView(withId(R.id.search_toLongitude)).perform(typeText("-123.1565264"), closeSoftKeyboard());
+        onView(withId(R.id.search_toLatitude)).perform(typeText("49.2696505"), closeSoftKeyboard());
+        onView(withId(R.id.search_toLongitude)).perform(typeText("-123.1565645"), closeSoftKeyboard());
         onView(withId(R.id.search)).perform(click());
         for (int i = 0; i <= 5; i++) {
             onView(withId(R.id.btnRight)).perform(click());
         }
     }
-}
+
+    @Test
+    public void TestSearchDateAndCaptionUpdate() {
+        onView(withId(R.id.CaptionCaptured)).perform(typeText("BobCaption"), closeSoftKeyboard());
+        onView(withId(R.id.buttonCaption)).perform(click());
+        onView(withId(R.id.search_search)).perform(click());
+        onView(withId(R.id.search_toCaption)).perform(typeText("BobCaption"), closeSoftKeyboard());
+        onView(withId(R.id.search)).perform(click());
+        for (int i = 0; i <= 5; i++) {
+            onView(withId(R.id.btnRight)).perform(click());
+        }
+        onView(withId(R.id.search_search)).perform(click());
+        onView(withId(R.id.search_toDate)).perform(typeText("20190302"), closeSoftKeyboard());
+        onView(withId(R.id.search_fromDate)).perform(typeText("20190301"), closeSoftKeyboard());
+        onView(withId(R.id.search)).perform(click());
+        for (int i = 0; i <= 5; i++) {
+            onView(withId(R.id.btnRight)).perform(click());
+        }
+    }
+        }
