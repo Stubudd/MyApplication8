@@ -163,28 +163,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
             }
 
     }
-
-//    private void repopulateGalleryBasedOnDate(String Caption){
-//        photoGallery2.clear();
-//        String fileName;
-//        File file = new File(Environment.getExternalStorageDirectory()
-//                .getAbsolutePath(), "/Android/data/com.example.stubu_000.myapplication/files/Pictures");
-//        File[] fList = file.listFiles();
-//        if (fList != null){
-//            for (File f :file.listFiles()) {
-//                fileName = f.getName();
-//                String [] separated = fileName.split("_");
-//                String tempstring = separated[3];  //test2_.jpg
-//                if(tempstring.compareTo(Caption) == 0){
-//                    photoGallery2.add(f);
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
-
     private ArrayList<String> repopulateGallery(String newMinDate, String newMaxDate){
         photoGallery2.clear();
         File file = new File(Environment.getExternalStorageDirectory()
