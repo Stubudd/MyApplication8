@@ -163,6 +163,7 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
             }
 
     }
+    //Test Commit
     private ArrayList<String> repopulateGallery(String newMinDate, String newMaxDate){
         photoGallery2.clear();
         File file = new File(Environment.getExternalStorageDirectory()
